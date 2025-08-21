@@ -1,0 +1,5 @@
+```output
+PARTITION          AVAIL  TIMELIMIT  NODES  STATE NODELIST
+doom                 up   infinite      2   idle  doo[1-2]
+gloom                up   infinite      2   idle  glo[1-2]
+```

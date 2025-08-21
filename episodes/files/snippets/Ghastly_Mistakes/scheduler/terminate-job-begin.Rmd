@@ -1,0 +1,6 @@
+```output
+Submitted batch job 13
+
+JOBID PARTITION  NAME      USER   ST  TIME  NODES NODELIST(REASON)
+   13 doom       long_job  luigi  R   0:02  1     doo1
+```
