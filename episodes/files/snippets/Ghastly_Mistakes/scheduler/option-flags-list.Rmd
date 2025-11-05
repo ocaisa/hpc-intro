@@ -1,5 +1,3 @@
-> option-flag-list.Rmd is constant for all snippet libraries
-
 * `--ntasks=<ntasks>` or `-n <ntasks>`: How many CPU cores does your job need,
   in total?
 

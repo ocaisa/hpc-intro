@@ -7,7 +7,7 @@ library(yaml)
 config <- yaml.load_file("lesson_config.yaml")
 
 ## If "main_config" key exists, load the second configuration and merge
-print(paste("Loading ", config$main_config))
+### print(paste("Loading ", config$main_config))
 if (!is.null(config$main_config) && file.exists(config$main_config)) {
   override_config <- yaml.load_file(config$main_config)
   config <- modifyList(config, override_config)
@@ -30,16 +30,14 @@ choose_doc <- function(child_file) {
     fallback = file.path(current_doc, fallback_snippets, child_file)
   )
   print(doc_paths)
-  print(getwd())
+  ### print(getwd())
 
   # Return the valid path, or NULL if neither exists
   if (file.exists(doc_paths$main)) {
-    print("Returning")
-    print(doc_paths$main)
+    print(paste("Returning", doc_paths$main))
     return(doc_paths$main)
   } else if (file.exists(doc_paths$fallback)) {
-    print("Returning")
-    print(doc_paths$fallback)
+    print(paste("Returning", doc_paths$fallback))
     return(doc_paths$fallback)
   } else {
     print("Returning NULL")

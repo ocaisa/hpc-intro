@@ -1,5 +1,5 @@
 ```bash
-`r config$remote$prompt` module avail
+`r config$remote$prompt` module avail | less
 ```
 
 ```output

@@ -31,8 +31,8 @@ might matter.
 
 ## Estimating Required Resources Using the Scheduler
 
-Although we covered requesting resources from the scheduler earlier with the
-π code, how do we know what type of resources the software will need in
+Although we covered requesting resources from the scheduler earlier,
+how do we know what type of resources the software will need in
 the first place, and its demand for each? In general, unless the software
 documentation or user testimonials provide some idea, we won't know how much
 memory or compute time a program will need.

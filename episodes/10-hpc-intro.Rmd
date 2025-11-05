@@ -4,6 +4,11 @@ teaching: 15
 exercises: 5
 ---
 
+```{r, echo=FALSE}
+# Source the external configuration script
+source("load_config.R")
+```
+
 ::::::::::::::::::::::::::::::::::::::: objectives
 
 - Describe what an HPC system is

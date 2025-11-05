@@ -82,6 +82,8 @@ To see available software modules, use `module avail`:
 ```{r, child=paste(snippets, '/modules/available-modules.Rmd', sep=''), eval=TRUE}
 ```
 
+Note that piping the output through `less` allows us to search within the output using the <kbd>/</kbd> key.
+
 ### Listing Currently Loaded Modules
 
 You can use the `module list` command to see which modules you currently have
@@ -175,12 +177,13 @@ software is loaded.
 Let's examine the output of `module avail` more closely, using the pager since
 there may be reams of output:
 
-```bash
-`r config$remote$prompt` module avail | less
-```
-
 ```{r, child=paste(snippets, '/modules/available-modules.Rmd', sep=''), eval=TRUE}
 ```
+
+If the software your Slurm script runs requires on a specific version
+of a dependency, make sure you use the full name of the module, rather
+than the _default_ loaded when you give only its name (up to the first
+slash).
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
