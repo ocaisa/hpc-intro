@@ -1,4 +1,4 @@
-```
+```output
        JobID    JobName  Partition    Account  AllocCPUS      State ExitCode
 ------------ ---------- ---------- ---------- ---------- ---------- --------
 7               file.sh cpubase_b+ def-spons+          1  COMPLETED      0:0
@@ -11,4 +11,3 @@
 9.batch           batch            def-spons+          1  COMPLETED      0:0
 9.extern         extern            def-spons+          1  COMPLETED      0:0
 ```
-{: .output}
