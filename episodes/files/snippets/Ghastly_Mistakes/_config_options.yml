@@ -9,7 +9,7 @@
 # Compute irresponsibly.
 ---
 
-snippets: "/snippets_library/Ghastly_Mistakes"
+snippets: "Ghastly_Mistakes"
 
 local:
   prompt: "luigi@mushroomkingdom:~$"

@@ -1,4 +1,8 @@
+```bash
+`r config$remote$prompt` ls /cvmfs/pilot.eessi-hpc.org/2020.12/software/x86_64/amd/zen2/software/Python/3.x.y-GCCcore-x.y.z/bin
 ```
+
+```output
 2to3              nosetests-3.8  python                 rst2s5.py
 2to3-3.8          pasteurize     python3                rst2xetex.py
 chardetect        pbr            python3.8              rst2xml.py
@@ -13,4 +17,3 @@ idle3.8           pygmentize     rst2odt_prepstyles.py  virtualenv
 netaddr           pytest         rst2odt.py             wheel
 nosetests         py.test        rst2pseudoxml.py
 ```
-{: .output}

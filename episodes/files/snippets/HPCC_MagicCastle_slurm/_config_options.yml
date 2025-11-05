@@ -29,6 +29,9 @@ remote:
   module_python3: "Python"
   prompt: "[yourUsername@login1 ~]$"
   bash_shebang: "#!/bin/bash"
+  modules:
+    python: "Python"
+
 
 sched:
   name: "Slurm"

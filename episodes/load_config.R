@@ -6,7 +6,8 @@ library(yaml)
 ## Load primary configuration
 config <- yaml.load_file("lesson_config.yaml")
 
-## If "config" key exists, load the second configuration and merge
+## If "main_config" key exists, load the second configuration and merge
+print(paste("Loading ", config$main_config))
 if (!is.null(config$main_config) && file.exists(config$main_config)) {
   override_config <- yaml.load_file(config$main_config)
   config <- modifyList(config, override_config)

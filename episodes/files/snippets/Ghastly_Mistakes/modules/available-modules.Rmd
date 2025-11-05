@@ -1,0 +1,13 @@
+```output
+~~~ /usr/local/modules ~~~
+  amdahl/0.0.1 (D)      python/2.7.1 (O)
+
+  Where:
+   L:        Module is loaded
+   D:        Default Module
+   O:        Module is obsolete
+
+Use "module spider" to find all possible modules and extensions.
+Use "module keyword key1 key2 ..." to search for all possible modules matching
+any of the "keys".
+```
