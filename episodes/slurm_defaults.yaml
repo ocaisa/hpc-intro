@@ -20,7 +20,8 @@ remote:
   user: "userid"                             # stand-in for the username
   prompt: "[userid@head:~]"                  # command-line prompt
   prompt_work: "[userid@head:/work/userid]"  # prompt under /work
-  module_python3: "Python"                   # name of the module providing py3
+  modules:
+    python: "Python"                         # name of the module providing Python v3
   shebang: "#!/bin/bash"                     # first line of every shell script
 
 # Commands & flags for the scheduler environment
