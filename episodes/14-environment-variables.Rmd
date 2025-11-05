@@ -212,7 +212,7 @@ job was submitted.
 ```
 
 ```output
-`r config$remote$bash_shebang`
+`r config$remote$shebang`
 `r config$sched$comment` `r config$sched$flag$time` 00:00:30
 
 echo -n "This script is running on "

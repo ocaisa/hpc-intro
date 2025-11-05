@@ -11,7 +11,7 @@
 # Compute responsibly.
 ---
 
-snippets: "/snippets_library/HPCC_MagicCastle_slurm"
+snippets: "HPCC_MagicCastle_slurm"
 
 local:
   prompt: "[you@laptop:~]$"

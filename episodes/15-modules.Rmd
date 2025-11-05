@@ -204,7 +204,7 @@ compute node).
 ```
 
 ```output
-`r config$remote$bash_shebang`
+`r config$remote$shebang`
 `r config$sched$comment` `r config$sched$flag$partition`
 `r if (!is.null(config$sched$flag$qos)) {print(paste(config$sched$comment,config$sched$flag$qos))}
 `r config$sched$comment` `r config$sched$flag$time` 00:00:30
