@@ -1,3 +1,0 @@
-```bash
-`r config$remote$prompt_work` cat slurm-38193.out
-```

@@ -31,8 +31,8 @@ might matter.
 
 ## Estimating Required Resources Using the Scheduler
 
-Although we covered requesting resources from the scheduler earlier with the
-π code, how do we know what type of resources the software will need in
+Although we covered requesting resources from the scheduler earlier,
+how do we know what type of resources the software will need in
 the first place, and its demand for each? In general, unless the software
 documentation or user testimonials provide some idea, we won't know how much
 memory or compute time a program will need.
@@ -69,18 +69,7 @@ use ``r config$sched$hist`` to get statistics about `parallel-job.sh`.
 `r config$remote$prompt` `r config$sched$hist`
 ```
 
-```output
-       JobID    JobName  Partition    Account  AllocCPUS      State ExitCode
------------- ---------- ---------- ---------- ---------- ---------- --------
-7               file.sh cpubase_b+ def-spons+          1  COMPLETED      0:0
-7.batch           batch            def-spons+          1  COMPLETED      0:0
-7.extern         extern            def-spons+          1  COMPLETED      0:0
-8               file.sh cpubase_b+ def-spons+          1  COMPLETED      0:0
-8.batch           batch            def-spons+          1  COMPLETED      0:0
-8.extern         extern            def-spons+          1  COMPLETED      0:0
-9            example-j+ cpubase_b+ def-spons+          1  COMPLETED      0:0
-9.batch           batch            def-spons+          1  COMPLETED      0:0
-9.extern         extern            def-spons+          1  COMPLETED      0:0
+```{r, child=paste(snippets, '/resources/account-history.Rmd', sep=''), eval=TRUE}
 ```
 
 This shows all the jobs we ran today (note that there are multiple entries per

@@ -167,27 +167,7 @@ tell us the important flags we might want to use when launching it.
 
 Create a submission file, requesting one task on a single node, then launch it.
 
-```bash
-`r config$remote$prompt` nano serial-job.sh
-`r config$remote$prompt` cat serial-job.sh
-```
-
-```bash
-`r config$remote$bash_shebang`
-`r config$sched$comment` `r config$sched$flag$name` solo-job
-`r config$sched$comment` `r config$sched$flag$queue` `r config$sched$queue$testing`
-`r config$sched$comment` -N 1
-`r config$sched$comment` -n 1
-
-# Load the computing environment we need
-module load `r config$remote$module_python3`
-
-# Execute the task
-amdahl
-```
-
-```bash
-`r config$remote$prompt` `r config$sched$submit$name` serial-job.sh
+```{r, child=paste(snippets, '/parallel/one-task.Rmd', sep=''), eval=TRUE}
 ```
 
 As before, use the `r config$sched$name` status commands to check whether your job
@@ -244,7 +224,7 @@ for 25.5 seconds, and no time was saved. The cluster can do better, if we ask.
 ## Running the Parallel Job
 
 The `amdahl` program uses the Message Passing Interface (MPI) for parallelism
-\-- this is a common tool on HPC systems.
+-- this is a common tool on HPC systems.
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
@@ -287,61 +267,7 @@ by examining the environment variables set when the job is launched.
 
 Let's modify the job script to request more cores and use the MPI run-time.
 
-```bash
-`r config$remote$prompt` cp serial-job.sh parallel-job.sh
-`r config$remote$prompt` nano parallel-job.sh
-`r config$remote$prompt` cat parallel-job.sh
-```
-
-```bash
-`r config$remote$bash_shebang`
-`r config$sched$comment` `r config$sched$flag$name` parallel-job
-`r config$sched$comment` `r config$sched$flag$queue` `r config$sched$queue$testing`
-`r config$sched$comment` -N 1
-`r config$sched$comment` -n 4
-
-# Load the computing environment we need
-# (mpi4py and numpy are in SciPy-bundle)
-module load `r config$remote$module_python3`
-module load SciPy-bundle
-
-# Execute the task
-mpiexec amdahl
-```
-
-Then submit your job. Note that the submission command has not really changed
-from how we submitted the serial job: all the parallel settings are in the
-batch file rather than the command line.
-
-```bash
-`r config$remote$prompt` `r config$sched$submit$name` parallel-job.sh
-```
-
-As before, use the status commands to check when your job runs.
-
-```bash
-`r config$remote$prompt` ls -t
-```
-
-```output
-slurm-347178.out  parallel-job.sh  slurm-347087.out  serial-job.sh  amdahl  README.md  LICENSE.txt
-```
-
-```bash
-`r config$remote$prompt` cat slurm-347178.out
-```
-
-```output
-Doing 30.000 seconds of 'work' on 4 processors,
-which should take 10.875 seconds with 0.850 parallel proportion of the workload.
-
-  Hello, World! I am process 0 of 4 on `r config$remote$node`. I will do all the serial 'work' for 4.500 seconds.
-  Hello, World! I am process 2 of 4 on `r config$remote$node`. I will do parallel 'work' for 6.375 seconds.
-  Hello, World! I am process 1 of 4 on `r config$remote$node`. I will do parallel 'work' for 6.375 seconds.
-  Hello, World! I am process 3 of 4 on `r config$remote$node`. I will do parallel 'work' for 6.375 seconds.
-  Hello, World! I am process 0 of 4 on `r config$remote$node`. I will do parallel 'work' for 6.375 seconds.
-
-Total execution time (according to rank 0): 10.888 seconds
+```{r, child=paste(snippets, '/parallel/four-tasks.Rmd', sep=''), eval=TRUE}
 ```
 
 :::::::::::::::::::::::::::::::::::::::  challenge
@@ -372,8 +298,6 @@ take, no matter how many cores you throw at it.
 This is the basic principle behind [Amdahl's Law][amdahl], which is one way
 of predicting improvements in execution time for a **fixed** workload that
 can be subdivided and run in parallel to some extent.
-
-
 
 :::::::::::::::::::::::::
 
@@ -406,63 +330,7 @@ versus the number of CPUs *n* would give a straight line, *S* = *n*.
 Let's run one more job, so we can see how close to a straight line our `amdahl`
 code gets.
 
-```bash
-`r config$remote$prompt` nano parallel-job.sh
-`r config$remote$prompt` cat parallel-job.sh
-```
-
-```bash
-`r config$remote$bash_shebang`
-`r config$sched$comment` `r config$sched$flag$name` parallel-job
-`r config$sched$comment` `r config$sched$flag$queue` `r config$sched$queue$testing`
-`r config$sched$comment` -N 1
-`r config$sched$comment` -n 8
-
-# Load the computing environment we need
-# (mpi4py and numpy are in SciPy-bundle)
-module load `r config$remote$module_python3`
-module load SciPy-bundle
-
-# Execute the task
-mpiexec amdahl
-```
-
-Then submit your job. Note that the submission command has not really changed
-from how we submitted the serial job: all the parallel settings are in the
-batch file rather than the command line.
-
-```bash
-`r config$remote$prompt` `r config$sched$submit$name` parallel-job.sh
-```
-
-As before, use the status commands to check when your job runs.
-
-```bash
-`r config$remote$prompt` ls -t
-```
-
-```output
-slurm-347271.out  parallel-job.sh  slurm-347178.out  slurm-347087.out  serial-job.sh  amdahl  README.md  LICENSE.txt
-```
-
-```bash
-`r config$remote$prompt` cat slurm-347178.out
-```
-
-```output
-which should take 7.688 seconds with 0.850 parallel proportion of the workload.
-
-  Hello, World! I am process 4 of 8 on `r config$remote$node`. I will do parallel 'work' for 3.188 seconds.
-  Hello, World! I am process 0 of 8 on `r config$remote$node`. I will do all the serial 'work' for 4.500 seconds.
-  Hello, World! I am process 2 of 8 on `r config$remote$node`. I will do parallel 'work' for 3.188 seconds.
-  Hello, World! I am process 1 of 8 on `r config$remote$node`. I will do parallel 'work' for 3.188 seconds.
-  Hello, World! I am process 3 of 8 on `r config$remote$node`. I will do parallel 'work' for 3.188 seconds.
-  Hello, World! I am process 5 of 8 on `r config$remote$node`. I will do parallel 'work' for 3.188 seconds.
-  Hello, World! I am process 6 of 8 on `r config$remote$node`. I will do parallel 'work' for 3.188 seconds.
-  Hello, World! I am process 7 of 8 on `r config$remote$node`. I will do parallel 'work' for 3.188 seconds.
-  Hello, World! I am process 0 of 8 on `r config$remote$node`. I will do parallel 'work' for 3.188 seconds.
-
-Total execution time (according to rank 0): 7.697 seconds
+```{r, child=paste(snippets, '/parallel/eight-tasks.Rmd', sep=''), eval=TRUE}
 ```
 
 ::::::::::::::::::::::::::::::::::::::  discussion

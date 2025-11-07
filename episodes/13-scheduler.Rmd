@@ -57,7 +57,7 @@ In this case, the job we want to run is a shell script -- essentially a
 text file containing a list of UNIX commands to be executed in a sequential
 manner. Our shell script will have three parts:
 
-- On the very first line, add ``r config$remote$bash_shebang``. The `#!`
+- On the very first line, add ``r config$remote$shebang``. The `#!`
   (pronounced "hash-bang" or "shebang") tells the computer what program is
   meant to process the contents of this file. In this case, we are telling it
   that the commands that follow are written for the command-line shell (what
@@ -75,7 +75,7 @@ manner. Our shell script will have three parts:
 ```
 
 ```bash
-`r config$remote$bash_shebang`
+`r config$remote$shebang`
 
 echo -n "This script is running on "
 hostname
@@ -163,7 +163,7 @@ resources we must customize our job script.
 Comments in UNIX shell scripts (denoted by `#`) are typically ignored, but
 there are exceptions. For instance the special `#!` comment at the beginning of
 scripts specifies what program should be used to run it (you'll typically see
-``r config$local$bash_shebang``). Schedulers like `r config$sched$name` also
+``r config$local$shebang``). Schedulers like `r config$sched$name` also
 have a special comment used to denote special scheduler-specific options.
 Though these comments differ from scheduler to scheduler,
 `r config$sched$name`'s special comment is ``r config$sched$comment``. Anything
@@ -179,7 +179,7 @@ name of a job. Add an option to the script:
 ```
 
 ```bash
-`r config$remote$bash_shebang`
+`r config$remote$shebang`
 `r config$sched$comment` `r config$sched$flag$name` hello-world
 
 echo -n "This script is running on "
@@ -253,7 +253,7 @@ for it on the cluster.
 ```
 
 ```bash
-`r config$remote$bash_shebang`
+`r config$remote$shebang`
 `r config$sched$comment` `r config$sched$flag$time` 00:01 # timeout in HH:MM
 
 echo -n "This script is running on "
@@ -282,7 +282,7 @@ wall time, and attempt to run a job for two minutes.
 ```
 
 ```bash
-`r config$remote$bash_shebang`
+`r config$remote$shebang`
 `r config$sched$comment` `r config$sched$flag$name` long_job
 `r config$sched$comment` `r config$sched$flag$time` 00:01 # timeout in HH:MM
 
