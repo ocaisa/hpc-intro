@@ -27,13 +27,13 @@ keywords: 'software, data, lesson, The Carpentries'
 
 # Life cycle stage of the lesson
 # possible values: pre-alpha, alpha, beta, stable
-life_cycle: 'alpha'
+life_cycle: 'beta'
 
 # License of the lesson materials (recommended CC-BY 4.0)
 license: 'CC-BY 4.0'
 
 # Link to the source repository for this lesson
-source: 'https://github.com/ocaisa/probable-pancake'
+source: 'https://github.com/carpentries-incubator/hpc-intro'
 
 # Default branch of your lesson
 branch: 'main'
@@ -95,6 +95,6 @@ profiles:
 
 
 carpentry_description: Lesson Description
-url: 'https://ocaisa.github.io/probable_pancake'
+url: 'https://carpentries-incubator.github.io/hpc-intro/'
 analytics: carpentries
 lang: en
