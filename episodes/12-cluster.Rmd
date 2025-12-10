@@ -206,7 +206,7 @@ For example, we can view all of the worker nodes by running the command
 `r config$remote$prompt` `r config$sched$info`
 ```
 
-```{r, child=paste(snippets, '/cluster/queue-info.Rmd', sep='')}
+```{r, child=paste(snippets('cluster/queue-info.Rmd'), sep='')}
 ```
 
 There are also specialized machines used for managing disk storage, user
@@ -321,7 +321,7 @@ This is an important point to remember: files saved on one node
 
 :::
 
-```{r, child=paste(snippets, '/cluster/specific-node-info.Rmd', sep=''), eval=TRUE}
+```{r, child=paste(snippets('cluster/specific-node-info.Rmd'), sep=''), eval=TRUE}
 ```
 
 ::: discussion

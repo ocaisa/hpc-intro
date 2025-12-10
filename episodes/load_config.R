@@ -1,46 +1,123 @@
-## R script to chain-load lesson configuration YAML files.
-## Top-level configuration is `/episodes/lesson_config.yml`
+##
+## R script to chain-load hierarchical lesson configuration YAML files.
+## Top-level configuration is typically "../config.yaml".
+##
 
 library(yaml)
+library(tools)
+library(knitr)
 
-## Load primary configuration
-config <- yaml.load_file("lesson_config.yaml")
+# -------------------------------------------------------------------
+# Utility: Get the snippet directory next to a config file
+# -------------------------------------------------------------------
 
-## If "main_config" key exists, load the second configuration and merge
-### print(paste("Loading ", config$main_config))
-if (!is.null(config$main_config) && file.exists(config$main_config)) {
-  override_config <- yaml.load_file(config$main_config)
-  config <- modifyList(config, override_config)
-}
-
-snippets <- paste("files/snippets/", config$snippets, sep="")
-
-# Extract main and fallback paths from config
-main_snippets     <- config$main_snippets
-fallback_snippets <- config$fallback_snippets
-
-# Function to choose the correct document path (or return NULL if neither exists)
-choose_doc <- function(child_file) {
-  # Get the current document name (without extension)
-  current_doc <- tools::file_path_sans_ext(knitr::current_input(dir = TRUE))
-
-  # Build paths for the child document inside subdirectories
-  doc_paths <- list(
-    main = file.path(current_doc, main_snippets, child_file),
-    fallback = file.path(current_doc, fallback_snippets, child_file)
-  )
-  print(doc_paths)
-  ### print(getwd())
-
-  # Return the valid path, or NULL if neither exists
-  if (file.exists(doc_paths$main)) {
-    print(paste("Returning", doc_paths$main))
-    return(doc_paths$main)
-  } else if (file.exists(doc_paths$fallback)) {
-    print(paste("Returning", doc_paths$fallback))
-    return(doc_paths$fallback)
-  } else {
-    print("Returning NULL")
-    return(NULL)  # Return NULL if neither path exists
+get_snippet_subdir <- function(file, must_exist = TRUE) {
+  full_file <- normalizePath(file)
+  dir <- file.path(dirname(full_file), "snippets")
+  
+  if (must_exist && !dir.exists(dir)) {
+    stop("Snippet directory does not exist: ", dir)
   }
+  
+  return(dir)
 }
+
+# -------------------------------------------------------------------
+# Load lesson configuration
+# -------------------------------------------------------------------
+
+config_file <- normalizePath("config.yaml")
+if(!file.exists(config_file)) {
+  stop("Could not find lesson configuration: ", config_file)
+}
+lesson_config <- yaml.load_file(config_file)
+# message("Loaded lesson config")
+
+# -------------------------------------------------------------------
+# Validate required fields
+# -------------------------------------------------------------------
+
+if (is.null(lesson_config$default_config)) {
+  stop("default_config is not defined in top-level configuration: ", config_file)
+}
+
+if (!file.exists(lesson_config$default_config)) {
+  stop("Default configuration file does not exist: ", lesson_config$default_config)
+}
+
+# -------------------------------------------------------------------
+# Load fallback/default config
+# -------------------------------------------------------------------
+
+config <- yaml.load_file(lesson_config$default_config)
+fallback_snippets <- get_snippet_subdir(lesson_config$default_config)
+
+# -------------------------------------------------------------------
+# Load optional custom config and merge
+# -------------------------------------------------------------------
+
+# Get environment variable
+custom_config_file <- Sys.getenv("HPC_CARPENTRY_CUSTOMIZATION")
+
+# If not set, fall back to lesson_config$custom_config (which may be NULL)
+if (custom_config_file == "") {
+  custom_config_file <- lesson_config$custom_config
+}
+if (!is.null(custom_config_file)) {
+  if (file.exists(custom_config_file)) {
+    
+    custom_config <- yaml.load_file(custom_config_file)
+    
+    # merge: custom overrides default
+    config <- modifyList(config, custom_config)
+    
+    # snippet directory for custom configs does NOT have to exist
+    main_snippets <- get_snippet_subdir(
+      custom_config_file,
+      must_exist = FALSE
+    )
+  } else {
+    stop("Custom configuration provided but does not exist: ", custom_config_file)
+  }
+  
+} else {
+  # no custom config → only fallback snippets available
+  main_snippets <- fallback_snippets
+}
+
+# message("Main config snippets from ", main_snippets, ", fallbacks from ", fallback_snippets)
+# -------------------------------------------------------------------
+# snippets(): pick main-override version or fallback version
+# -------------------------------------------------------------------
+
+snippets <- function(child_file) {
+  
+  # directory of the *currently-rendered* file
+  current_dir <- dirname(knitr::current_input(dir = TRUE))
+  
+  # Construct absolute paths to the snippet candidates
+  doc_paths <- list(
+    main     = file.path(main_snippets, child_file),
+    fallback = file.path(fallback_snippets, child_file)
+  )
+  
+  # print(doc_paths)
+  
+  if (file.exists(doc_paths$main)) {
+    message("Using MAIN snippet: ", doc_paths$main)
+    return(doc_paths$main)
+  }
+  
+  if (file.exists(doc_paths$fallback)) {
+    message("Using FALLBACK snippet: ", doc_paths$fallback)
+    return(doc_paths$fallback)
+  }
+  
+  stop("No snippet file exists: ", child_file,
+       "\nMain path: ",     doc_paths$main,
+       "\nFallback path: ", doc_paths$fallback)
+}
+
+# -------------------------------------------------------------------
+# End of script
+# -------------------------------------------------------------------
