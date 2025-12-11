@@ -6,7 +6,7 @@ exercises: 10
 
 
 ``` error
-Error in get_rmd_dir(): object 'candidate' not found
+Error in find_config(paths = c("config.yaml", "../config.yaml"), root = rmd_dir): Could not find lesson configuration in any known location.
 ```
 
 ::: questions
