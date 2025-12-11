@@ -78,7 +78,7 @@ To see available software modules, use `module avail`:
 
 
 ```bash
-[yourUsername@login1 ~]$ module avail | less
+luigi@castle:~$ module avail | less
 ```
 
 ```output
@@ -111,7 +111,7 @@ loaded in your environment. If you have no modules loaded, you will see a
 message telling you so.
 
 ```bash
-[yourUsername@login1 ~]$ module list
+luigi@castle:~$ module list
 ```
 
 ```output
@@ -128,14 +128,14 @@ programs the same way that Bash does, so we can use it to tell us
 where a particular piece of software is stored.
 
 ```bash
-[yourUsername@login1 ~]$ which python3
+luigi@castle:~$ which python3
 ```
 
 
 If the `python3` command was unavailable, we would see output like
 
 ```output
-/usr/bin/which: no python3 in (/cvmfs/pilot.eessi-hpc.org/2020.12/compat/linux/x86_64/usr/bin:/opt/software/slurm/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/puppetlabs/bin:/home/yourUsername/.local/bin:/home/yourUsername/bin)
+/usr/bin/which: no python3 in (/cvmfs/pilot.eessi-hpc.org/2020.12/compat/linux/x86_64/usr/bin:/opt/software/slurm/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/puppetlabs/bin:/home/luigi/.local/bin:/home/luigi/bin)
 ```
 
 Note that this wall of text is really a list, with values separated
@@ -150,8 +150,8 @@ searched the following directories for `python3`, without success:
 /usr/local/sbin
 /usr/sbin
 /opt/puppetlabs/bin
-/home/yourUsername/.local/bin
-/home/yourUsername/bin
+/home/luigi/.local/bin
+/home/luigi/bin
 ```
 
 However, in our case we do have an existing `python3` available so we see
@@ -167,8 +167,8 @@ We can load the `python3` command with `module load`:
 
 
 ```bash
-[yourUsername@login1 ~]$ module load Python
-[yourUsername@login1 ~]$ which python3
+luigi@castle:~$ module load Python
+luigi@castle:~$ which python3
 ```
 
 ```output
@@ -185,7 +185,7 @@ before giving up and telling us it can't find it. As with all environment
 variables we can print it out using `echo`.
 
 ```bash
-[yourUsername@login1 ~]$ echo $PATH
+luigi@castle:~$ echo $PATH
 ```
 
 ```output
@@ -199,7 +199,7 @@ ran the `module load` command, it added a directory to the beginning of our
 
 
 ```bash
-[yourUsername@login1 ~]$ ls /cvmfs/pilot.eessi-hpc.org/2020.12/software/x86_64/amd/zen2/software/Python/3.x.y-GCCcore-x.y.z/bin
+luigi@castle:~$ ls /cvmfs/pilot.eessi-hpc.org/2020.12/software/x86_64/amd/zen2/software/Python/3.x.y-GCCcore-x.y.z/bin
 ```
 
 ```output
@@ -228,7 +228,7 @@ To demonstrate, let's use `module list`. `module list` shows all loaded
 software modules.
 
 ```bash
-[yourUsername@login1 ~]$ module list
+luigi@castle:~$ module list
 ```
 
 ```output
@@ -239,8 +239,8 @@ Currently Loaded Modules:
 ```
 
 ```bash
-[yourUsername@login1 ~]$ module load GROMACS
-[yourUsername@login1 ~]$ module list
+luigi@castle:~$ module load GROMACS
+luigi@castle:~$ module list
 ```
 
 ```output
@@ -266,8 +266,8 @@ package), also loaded `GMP/6.2.0-GCCcore-x.y.z` and
 `GROMACS` package.
 
 ```bash
-[yourUsername@login1 ~]$ module unload GROMACS
-[yourUsername@login1 ~]$ module list
+luigi@castle:~$ module unload GROMACS
+luigi@castle:~$ module list
 ```
 
 ```output
@@ -292,8 +292,8 @@ not). If we wanted to unload everything at once, we could run `module purge`
 (unloads everything).
 
 ```bash
-[yourUsername@login1 ~]$ module purge
-[yourUsername@login1 ~]$ module list
+luigi@castle:~$ module purge
+luigi@castle:~$ module list
 ```
 
 ```output
@@ -331,7 +331,7 @@ there may be reams of output:
 
 
 ```bash
-[yourUsername@login1 ~]$ module avail | less
+luigi@castle:~$ module avail | less
 ```
 
 ```output
@@ -374,13 +374,13 @@ compute node).
 ## Solution
 
 ```bash
-[yourUsername@login1 ~]$ nano python-module.sh
-[yourUsername@login1 ~]$ cat python-module.sh
+luigi@castle:~$ nano python-module.sh
+luigi@castle:~$ cat python-module.sh
 ```
 
 ```output
 #!/bin/bash
-#SBATCH 
+#SMASH 
 r config$sched$comment` -t 00:00:30
 
 module load Python
@@ -389,7 +389,7 @@ python3 --version
 ```
 
 ```bash
-[yourUsername@login1 ~]$ sbatch  python-module.sh
+luigi@castle:~$ smash  python-module.sh
 ```
 
 :::::::::::::::::::::::::
