@@ -5,6 +5,9 @@ exercises: 5
 ---
 
 
+``` error
+Error in find_config(paths = c("config.yaml", "../config.yaml"), root = rmd_dir): Could not find lesson configuration in any known location.
+```
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 

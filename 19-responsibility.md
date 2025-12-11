@@ -5,6 +5,9 @@ exercises: 5
 ---
 
 
+``` error
+Error in find_config(paths = c("config.yaml", "../config.yaml"), root = rmd_dir): Could not find lesson configuration in any known location.
+```
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
@@ -264,17 +267,17 @@ data.
 
 Say you have a "data" folder containing 10,000 or so files, a healthy mix of
 small and large ASCII and binary data. Which of the following would be the
-best way to transfer them to HPC Carpentry's Cloud Cluster?
+best way to transfer them to ?
 
-1. `scp -r data yourUsername@cluster.hpc-carpentry.org:~/`
-2. `rsync -ra data yourUsername@cluster.hpc-carpentry.org:~/`
-3. `rsync -raz data yourUsername@cluster.hpc-carpentry.org:~/`
+1. `scp -r data @:~/`
+2. `rsync -ra data @:~/`
+3. `rsync -raz data @:~/`
 4. `tar -cvf data.tar data;`
 
-   `rsync -raz data.tar yourUsername@cluster.hpc-carpentry.org:~/`
+   `rsync -raz data.tar @:~/`
 5. `tar -cvzf data.tar.gz data;`
 
-   `rsync -ra data.tar.gz yourUsername@cluster.hpc-carpentry.org:~/`
+   `rsync -ra data.tar.gz @:~/`
 
 :::::::::::::::  solution
 
