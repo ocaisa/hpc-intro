@@ -66,3 +66,5 @@ jobs:
           sandpaper::package_cache_trigger(TRUE)
           sandpaper:::ci_deploy(reset = reset)
         shell: Rscript {0}
+        env:
+          HPC_CARPENTRY_CUSTOMIZATION: ${{ vars.HPC_CARPENTRY_CUSTOMIZATION }}
