@@ -86,13 +86,13 @@ single argument.
 
 Go ahead and open your terminal or graphical SSH client, then log in to the
 cluster using your username and the remote computer you can reach from the
-outside world, World 8-4.
+outside world, cluster.hpc-carpentry.org.
 
 ```bash
-luigi@mushroomkingdom:~$ ssh luigi@castle.bowser.org
+[you@laptop:~]$ ssh yourUsername@cluster.hpc-carpentry.org
 ```
 
-Remember to replace `luigi` with your username or the one
+Remember to replace `yourUsername` with your username or the one
 supplied by the instructors. You may be asked for your password. Watch out: the
 characters you type after the password prompt are not displayed on the screen.
 Normal output will resume once you press `Enter`.
@@ -107,11 +107,11 @@ computer we are logged onto can be checked with the `hostname` command. (You
 may also notice that the current hostname is also part of our prompt!)
 
 ```bash
-luigi@castle:~$ hostname
+[yourUsername@login1 ~]$ hostname
 ```
 
 ```output
-castle
+login1
 ```
 
 ::: challenge
@@ -129,7 +129,7 @@ differences you spot with your neighbors.
 
 ## It's a Beautiful Day in the Neighborhood
 
-The deepest layer should differ: `luigi` is uniquely yours.
+The deepest layer should differ: `yourUsername` is uniquely yours.
 Are there differences in the path at higher levels?
 
 If both of you have empty directories, they will look identical. If you
@@ -139,7 +139,7 @@ are you working on?
 Use `pwd` to **p**rint the **w**orking **d**irectory path:
 
 ```bash
-luigi@castle:~$ pwd
+[yourUsername@login1 ~]$ pwd
 ```
 
 You can run `ls` to **l**i**s**t the directory contents, though it's
@@ -147,7 +147,7 @@ possible nothing will show up (if no files have been provided). To be sure,
 use the `-a` flag to show hidden files, too.
 
 ```bash
-luigi@castle:~$ ls -a
+[yourUsername@login1 ~]$ ls -a
 ```
 
 At a minimum, this will show the current directory as `.`, and the parent
@@ -192,15 +192,15 @@ or hard tasks that require a lot of computational resources.
 
 All interaction with the worker nodes is handled by a specialized piece of
 software called a scheduler (the scheduler used in this lesson is called
-**Slurp**). We'll learn more about how to use the
+**Slurm**). We'll learn more about how to use the
 scheduler to submit jobs next, but for now, it can also tell us more
 information about the worker nodes.
 
 For example, we can view all of the worker nodes by running the command
-`sink`.
+`sinfo`.
 
 ```bash
-luigi@castle:~$ sink
+[yourUsername@login1 ~]$ sinfo
 ```
 
 
@@ -241,8 +241,8 @@ Note that, if you're logged in to the remote computer cluster, you need to
 log out first. To do so, type `Ctrl+d` or `exit`:
 
 ```bash
-luigi@castle:~$ exit
-luigi@mushroomkingdom:~$
+[yourUsername@login1 ~]$ exit
+[you@laptop:~]$
 ```
 
 :::: solution
@@ -255,21 +255,21 @@ on a Linux system are:
 Run system utilities
 
 ```bash
-luigi@mushroomkingdom:~$ nproc --all
-luigi@mushroomkingdom:~$ free -m
+[you@laptop:~]$ nproc --all
+[you@laptop:~]$ free -m
 ```
 
 Read from `/proc`
 
 ```bash
-luigi@mushroomkingdom:~$ cat /proc/cpuinfo
-luigi@mushroomkingdom:~$ cat /proc/meminfo
+[you@laptop:~]$ cat /proc/cpuinfo
+[you@laptop:~]$ cat /proc/meminfo
 ```
 
 Use a system monitor
 
 ```bash
-luigi@mushroomkingdom:~$ htop
+[you@laptop:~]$ htop
 ```
 
 ::::
@@ -284,16 +284,16 @@ Now compare the resources of your computer with those of the head node.
 :::: solution
 
 ```bash
-luigi@mushroomkingdom:~$ ssh luigi@castle.bowser.org
-luigi@castle:~$ nproc --all
-luigi@castle:~$ free -m
+[you@laptop:~]$ ssh yourUsername@cluster.hpc-carpentry.org
+[yourUsername@login1 ~]$ nproc --all
+[yourUsername@login1 ~]$ free -m
 ```
 
 You can get more information about the processors using `lscpu`,
 and a lot of detail about the memory by reading the file `/proc/meminfo`:
 
 ```bash
-luigi@castle:~$ less /proc/meminfo
+[yourUsername@login1 ~]$ less /proc/meminfo
 ```
 
 You can also explore the available filesystems using `df` to show **d**isk
@@ -302,7 +302,7 @@ i.e., GB instead of B. The **t**ype flag `-T` shows what kind of filesystem
 each resource is.
 
 ```bash
-luigi@castle:~$ df -Th
+[yourUsername@login1 ~]$ df -Th
 ```
 ::::
 :::
@@ -311,7 +311,7 @@ luigi@castle:~$ df -Th
 The local filesystems (ext, tmp, xfs, zfs) will depend on whether you're
 on the same login node (or compute node, later on). Networked filesystems
 (beegfs, cifs, gpfs, nfs, pvfs) will be similar --- but may include
-luigi, depending on how it is [mounted](
+yourUsername, depending on how it is [mounted](
 https://en.wikipedia.org/wiki/Mount_(computing)).
 :::
 
@@ -333,7 +333,7 @@ where your jobs will actually run. Try running this command to see
 the name, CPUs and memory available on one of the worker nodes:
 
 ```bash
-luigi@castle:~$ sinfo -o "%n %c %m" | column -t
+[yourUsername@login1 ~]$ sinfo -o "%n %c %m" | column -t
 ```
 :::
 
