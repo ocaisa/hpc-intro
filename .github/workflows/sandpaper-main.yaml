@@ -62,6 +62,7 @@ jobs:
           # We always reset the build for HPC Carpentry as we need
           # a copy of config.yaml in the md_outputs branch
           # (and it get's removed if we don't reset)
+          Sys.getenv("HPC_CARPENTRY_CUSTOMIZATION")
           reset <- TRUE
           sandpaper::package_cache_trigger(TRUE)
           sandpaper:::ci_deploy(reset = reset)
