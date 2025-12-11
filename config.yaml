@@ -95,20 +95,21 @@ profiles:
 
 # CONFIGURING FOR YOUR SYSTEM
 
-# For this lesson we use a default configuration which _must_ have all items
-# (the paths below are relative to the episodes directory)
+# For this lesson we use a default configuration which should have all
+# configuration and snippet items referenced in the lesson.
+# (snippets are in a subdirectory alongside the configuraton file)
 default_config: episodes/files/customization/HPCC_MagicCastle_slurm/_config_options.yml
 
 # Optionally, you can then override this default with (a subset of) customized
 # values that more closely match your system
-# (snippets are a subdirectory alongside the configuraton file, you can
+# (custom snippets should be in a subdirectory alongside the configuraton file, you can
 # also override none or as many of those as you like)
 
 # You could use the configuration option below but, rather than edit this file,
 # the build system listens to the environment variable
 # "HPC_CARPENTRY_CUSTOMIZATION" which you set to the path to your customisations
 
-# custom_config: files/customization/Ghastly_Mistakes/_config_options.yml
+# custom_config: episodes/files/customization/Ghastly_Mistakes/_config_options.yml
 
 carpentry_description: Lesson Description
 url: 'https://carpentries-incubator.github.io/hpc-intro/'
