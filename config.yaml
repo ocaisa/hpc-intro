@@ -97,7 +97,7 @@ profiles:
 
 # For this lesson we use a default configuration which _must_ have all items
 # (the paths below are relative to the episodes directory)
-default_config: files/customization/HPCC_MagicCastle_slurm/_config_options.yml
+default_config: episodes/files/customization/HPCC_MagicCastle_slurm/_config_options.yml
 
 # Optionally, you can then override this default with (a subset of) customized
 # values that more closely match your system
