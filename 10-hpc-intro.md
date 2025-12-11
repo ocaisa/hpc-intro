@@ -5,9 +5,8 @@ exercises: 5
 ---
 
 
-``` warning
-Warning in normalizePath(input): path[1]="10-hpc-intro.Rmd": No such file or
-directory
+``` error
+Error in get_rmd_dir(): object 'candidate' not found
 ```
 
 ::::::::::::::::::::::::::::::::::::::: objectives

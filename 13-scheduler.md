@@ -5,9 +5,8 @@ exercises: 30
 ---
 
 
-``` warning
-Warning in normalizePath(input): path[1]="13-scheduler.Rmd": No such file or
-directory
+``` error
+Error in get_rmd_dir(): object 'candidate' not found
 ```
 
 ::::::::::::::::::::::::::::::::::::::: objectives
@@ -42,8 +41,8 @@ why sometimes your job do not start instantly as in your laptop.
 
 ![](fig/restaurant_queue_manager.svg){alt="Compare a job scheduler to a waiter in a restaurant" max-width="75%"}
 
-The scheduler used in this lesson is Slurm. Although
-Slurm is not used everywhere, running jobs is quite similar
+The scheduler used in this lesson is . Although
+ is not used everywhere, running jobs is quite similar
 regardless of what software is being used. The exact syntax might change, but
 the concepts remain the same.
 
@@ -58,7 +57,7 @@ In this case, the job we want to run is a shell script -- essentially a
 text file containing a list of UNIX commands to be executed in a sequential
 manner. Our shell script will have three parts:
 
-- On the very first line, add `#!/bin/bash`. The `#!`
+- On the very first line, add ``. The `#!`
   (pronounced "hash-bang" or "shebang") tells the computer what program is
   meant to process the contents of this file. In this case, we are telling it
   that the commands that follow are written for the command-line shell (what
@@ -72,11 +71,11 @@ manner. Our shell script will have three parts:
   name of the machine the script is run on.
 
 ```bash
-[yourUsername@login1 ~]$ nano example-job.sh
+ nano example-job.sh
 ```
 
 ```bash
-#!/bin/bash
+
 
 echo -n "This script is running on "
 hostname
@@ -93,11 +92,11 @@ Run the script. Does it execute on the cluster or just our login node?
 ## Solution
 
 ```bash
-[yourUsername@login1 ~]$ bash example-job.sh
+ bash example-job.sh
 ```
 
 ```output
-This script is running on login1
+This script is running on 
 ```
 
 :::::::::::::::::::::::::
@@ -109,28 +108,25 @@ the compute nodes: we need the scheduler to queue up `example-job.sh`
 to run on a compute node.
 
 To submit this task to the scheduler, we use the
-`sbatch` command.
+`` command.
 This creates a *job* which will run the *script* when *dispatched* to
 a compute node which the queuing system has identified as being
 available to perform the work.
 
 ```bash
-[yourUsername@login1 ~]$ sbatch  example-job.sh
+   example-job.sh
 ```
 
 
-```output
-Submitted batch job 7
-```
 
 And that's all we need to do to submit a job. Our work is done -- now the
 scheduler takes over and tries to run the job for us. While the job is waiting
 to run, it goes into a list of jobs called the *queue*. To check on our job's
 status, we check the queue using the command
-`squeue -u yourUsername`.
+` `.
 
 ```bash
-[yourUsername@login1 ~]$ squeue -u yourUsername
+  
 ```
 
 ```output
@@ -147,7 +143,7 @@ or `RUNNING` state. Sometimes our jobs might need to wait in a queue
 ## Where's the Output?
 
 On the login node, this script printed output to the terminal -- but
-now, when `squeue` shows the job has finished,
+now, when `` shows the job has finished,
 nothing was printed to the terminal.
 
 Cluster job output is typically redirected to a file in the directory you
@@ -166,24 +162,24 @@ resources we must customize our job script.
 Comments in UNIX shell scripts (denoted by `#`) are typically ignored, but
 there are exceptions. For instance the special `#!` comment at the beginning of
 scripts specifies what program should be used to run it (you'll typically see
-`#!/bin/bash`). Schedulers like Slurm also
+``). Schedulers like  also
 have a special comment used to denote special scheduler-specific options.
 Though these comments differ from scheduler to scheduler,
-Slurm's special comment is `#SBATCH`. Anything
-following the `#SBATCH` comment is interpreted as an
+'s special comment is ``. Anything
+following the `` comment is interpreted as an
 instruction to the scheduler.
 
 Let's illustrate this by example. By default, a job's name is the name of the
-script, but the `-J` option can be used to change the
+script, but the `` option can be used to change the
 name of a job. Add an option to the script:
 
 ```bash
-[yourUsername@login1 ~]$ cat example-job.sh
+ cat example-job.sh
 ```
 
 ```bash
-#!/bin/bash
-#SBATCH -J hello-world
+
+  hello-world
 
 echo -n "This script is running on "
 hostname
@@ -192,8 +188,8 @@ hostname
 Submit the job and monitor its status:
 
 ```bash
-[yourUsername@login1 ~]$ sbatch  example-job.sh
-[yourUsername@login1 ~]$ squeue -u yourUsername
+   example-job.sh
+  
 ```
 
 ```output
@@ -227,7 +223,7 @@ The following are several key resource requests:
 
 - `--nodes=<nnodes>` or `-N <nnodes>`: How many separate machines does your job
   need to run on? Note that if you set `ntasks` to a number greater than what
-  one machine can offer, Slurm will set this value
+  one machine can offer,  will set this value
   automatically.
 
 Note that just *requesting* these resources does not make your job run faster,
@@ -252,12 +248,12 @@ for it on the cluster.
 ## Solution
 
 ```bash
-[yourUsername@login1 ~]$ cat example-job.sh
+ cat example-job.sh
 ```
 
 ```bash
-#!/bin/bash
-#SBATCH -t 00:01 # timeout in HH:MM
+
+  00:01 # timeout in HH:MM
 
 echo -n "This script is running on "
 sleep 20 # time in seconds
@@ -265,10 +261,10 @@ hostname
 ```
 
 ```bash
-[yourUsername@login1 ~]$ sbatch  example-job.sh
+   example-job.sh
 ```
 
-Why are the Slurm runtime and `sleep` time not identical?
+Why are the  runtime and `sleep` time not identical?
 
 
 
@@ -281,13 +277,13 @@ killed. Let's use wall time as an example. We will request 1 minute of
 wall time, and attempt to run a job for two minutes.
 
 ```bash
-[yourUsername@login1 ~]$ cat example-job.sh
+ cat example-job.sh
 ```
 
 ```bash
-#!/bin/bash
-#SBATCH -J long_job
-#SBATCH -t 00:01 # timeout in HH:MM
+
+  long_job
+  00:01 # timeout in HH:MM
 
 echo "This script is running on ... "
 sleep 240 # time in seconds
@@ -298,12 +294,12 @@ Submit the job and wait for it to finish. Once it is has finished, check the
 log file.
 
 ```bash
-[yourUsername@login1 ~]$ sbatch  example-job.sh
-[yourUsername@login1 ~]$ squeue -u yourUsername
+   example-job.sh
+  
 ```
 
 ```bash
-[yourUsername@login1 ~]$ cat slurm-12.out
+ cat slurm-12.out
 ```
 
 ```output
@@ -317,7 +313,7 @@ this appears harsh, this is actually a feature. Strict adherence to resource
 requests allows the scheduler to find the best possible place for your jobs.
 Even more importantly, it ensures that another user cannot use more resources
 than they've been given. If another user messes up and accidentally attempts to
-use all of the cores or memory on a node, Slurm will either
+use all of the cores or memory on a node,  will either
 restrain their job to the requested resources or kill the job outright. Other
 jobs on the node will be unaffected. This means that one user cannot mess up
 the experience of others, the only jobs affected by a mistake in scheduling
@@ -326,13 +322,13 @@ will be their own.
 ## Cancelling a Job
 
 Sometimes we'll make a mistake and need to cancel a job. This can be done with
-the `scancel` command. Let's submit a job and then cancel it using
+the `` command. Let's submit a job and then cancel it using
 its job number (remember to change the walltime so that it runs long enough for
 you to cancel it before it is killed!).
 
 ```bash
-[yourUsername@login1 ~]$ sbatch  example-job.sh
-[yourUsername@login1 ~]$ squeue -u yourUsername
+   example-job.sh
+  
 ```
 
 ```output
@@ -347,9 +343,9 @@ return of your command prompt indicates that the request to cancel the job was
 successful.
 
 ```bash
-[yourUsername@login1 ~]$ scancel 38759
+  38759
 # It might take a minute for the job to disappear from the queue...
-[yourUsername@login1 ~]$ squeue -u yourUsername
+  
 ```
 
 ```output
@@ -373,15 +369,15 @@ Try submitting multiple jobs and then cancelling them all.
 First, submit a trio of jobs:
 
 ```bash
-[yourUsername@login1 ~]$ sbatch  example-job.sh
-[yourUsername@login1 ~]$ sbatch  example-job.sh
-[yourUsername@login1 ~]$ sbatch  example-job.sh
+   example-job.sh
+   example-job.sh
+   example-job.sh
 ```
 
 Then, cancel them all:
 
 ```bash
-[yourUsername@login1 ~]$ scancel -u yourUsername
+  -u 
 ```
 
 :::::::::::::::::::::::::
@@ -391,34 +387,34 @@ Then, cancel them all:
 ## Other Types of Jobs
 
 Up to this point, we've focused on running jobs in batch mode.
-`Slurm` also provides the ability to start an interactive session.
+`` also provides the ability to start an interactive session.
 
 There are very frequently tasks that need to be done interactively. Creating an
 entire job script might be overkill, but the amount of resources required is
 too much for a login node to handle. A good example of this might be building a
 genome index for alignment with a tool like [HISAT2][hisat]. Fortunately, we
-can run these types of tasks as a one-off with `srun`.
+can run these types of tasks as a one-off with ``.
 
-`srun` runs a single command on the cluster and then
+`` runs a single command on the cluster and then
 exits. Let's demonstrate this by running the `hostname` command with
-`srun`. (We can cancel an `srun`
+``. (We can cancel an ``
 job with `Ctrl-c`.)
 
 ```bash
-[yourUsername@login1 ~]$ srun hostname
+  hostname
 ```
 
 ```output
-smnode1
+
 ```
 
-`srun` accepts all of the same options as
-`sbatch`. However, instead of specifying these in a script,
+`` accepts all of the same options as
+``. However, instead of specifying these in a script,
 these options are specified on the command-line when starting a job. To submit
 a job that uses 2 CPUs for instance, we could use the following command:
 
 ```bash
-[yourUsername@login1 ~]$ srun -n 2 echo "This job will use 2 CPUs."
+  -n 2 echo "This job will use 2 CPUs."
 ```
 
 ```output
@@ -427,17 +423,17 @@ This job will use 2 CPUs.
 ```
 
 Typically, the resulting shell environment will be the same as that for
-`sbatch`.
+``.
 
 ### Interactive jobs
 
 Sometimes, you will need a lot of resources for interactive use. Perhaps it's
 our first time running an analysis or we are attempting to debug something that
-went wrong with a previous job. Fortunately, Slurm makes it
-easy to start an interactive job with `srun`:
+went wrong with a previous job. Fortunately,  makes it
+easy to start an interactive job with ``:
 
 ```bash
-[yourUsername@login1 ~]$ srun --pty bash
+  --pty bash
 ```
 
 You should be presented with a bash prompt. Note that the prompt will likely
@@ -450,7 +446,7 @@ logged on. You can also verify this with `hostname`.
 
 To see graphical output inside your jobs, you need to use X11 forwarding. To
 connect with this feature enabled, use the `-Y` option when you login with
-the `ssh` command, e.g., `ssh -Y yourUsername@cluster.hpc-carpentry.org`.
+the `ssh` command, e.g., `ssh -Y @`.
 
 To demonstrate what happens when you create a graphics window on the remote
 node, use the `xeyes` command. A relatively adorable pair of eyes should pop
@@ -460,8 +456,8 @@ XQuartz (and restarted your computer) for this to work.
 If your cluster has the
 [slurm-spank-x11](https://github.com/hautreux/slurm-spank-x11) plugin
 installed, you can ensure X11 forwarding within interactive jobs by using the
-`--x11` option for `srun` with the command
-`srun --x11 --pty bash`.
+`--x11` option for `` with the command
+` --x11 --pty bash`.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
