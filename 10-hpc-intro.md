@@ -10,6 +10,10 @@ Warning in normalizePath(input): path[1]="10-hpc-intro.Rmd": No such file or
 directory
 ```
 
+``` error
+Error in find_config(paths = c("config.yaml", "../config.yaml"), root = rmd_dir): Could not find lesson configuration in any known location.
+```
+
 ::::::::::::::::::::::::::::::::::::::: objectives
 
 - Describe what an HPC system is

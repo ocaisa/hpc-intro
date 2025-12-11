@@ -10,6 +10,10 @@ Warning in normalizePath(input): path[1]="17-parallel.Rmd": No such file or
 directory
 ```
 
+``` error
+Error in find_config(paths = c("config.yaml", "../config.yaml"), root = rmd_dir): Could not find lesson configuration in any known location.
+```
+
 ::::::::::::::::::::::::::::::::::::::: objectives
 
 - Install a Python package using `pip`
@@ -35,7 +39,7 @@ we have to improve the performance of computational tasks.
 If you disconnected, log back in to the cluster.
 
 ```bash
-[you@laptop:~]$ ssh yourUsername@cluster.hpc-carpentry.org
+ ssh @
 ```
 
 ## Install the Amdahl Program
@@ -46,8 +50,8 @@ Move into the extracted directory, then use the Package Installer for Python,
 or `pip`, to install it in your ("user") home directory:
 
 ```bash
-[yourUsername@login1 ~]$ cd amdahl
-[yourUsername@login1 ~]$ python3 -m pip install --user .
+ cd amdahl
+ python3 -m pip install --user .
 ```
 
 :::::::::::::::::::::::::::::::::::::::::  callout
@@ -79,20 +83,20 @@ retrieve the tarball from <https://github.com/mpi4py/mpi4py/tarball/master>
 then `rsync` it to the cluster, extract, and install:
 
 ```bash
-[you@laptop:~]$ wget -O mpi4py.tar.gz https://github.com/mpi4py/mpi4py/releases/download/3.1.4/mpi4py-3.1.4.tar.gz
-[you@laptop:~]$ scp mpi4py.tar.gz yourUsername@cluster.hpc-carpentry.org:
+ wget -O mpi4py.tar.gz https://github.com/mpi4py/mpi4py/releases/download/3.1.4/mpi4py-3.1.4.tar.gz
+ scp mpi4py.tar.gz @:
 # or
-[you@laptop:~]$ rsync -avP mpi4py.tar.gz yourUsername@cluster.hpc-carpentry.org:
+ rsync -avP mpi4py.tar.gz @:
 ```
 
 ```bash
-[you@laptop:~]$ ssh yourUsername@cluster.hpc-carpentry.org
-[yourUsername@login1 ~]$ tar -xvzf mpi4py.tar.gz  # extract the archive
-[yourUsername@login1 ~]$ mv mpi4py* mpi4py        # rename the directory
-[yourUsername@login1 ~]$ cd mpi4py
-[yourUsername@login1 ~]$ python3 -m pip install --user .
-[yourUsername@login1 ~]$ cd ../amdahl
-[yourUsername@login1 ~]$ python3 -m pip install --user .
+ ssh @
+ tar -xvzf mpi4py.tar.gz  # extract the archive
+ mv mpi4py* mpi4py        # rename the directory
+ cd mpi4py
+ python3 -m pip install --user .
+ cd ../amdahl
+ python3 -m pip install --user .
 ```
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -113,7 +117,7 @@ To check whether this warning is a problem, use `which` to search for the
 `amdahl` program:
 
 ```bash
-[yourUsername@login1 ~]$ which amdahl
+ which amdahl
 ```
 
 If the command returns no output, displaying a new prompt, it means the file
@@ -123,15 +127,15 @@ Edit your shell configuration file as follows, then log off the cluster and
 back on again so it takes effect.
 
 ```bash
-[yourUsername@login1 ~]$ nano ~/.bashrc
-[yourUsername@login1 ~]$ tail ~/.bashrc
+ nano ~/.bashrc
+ tail ~/.bashrc
 ```
 
 ```output
 export PATH=${PATH}:${HOME}/.local/bin
 ```
 
-After logging back in to cluster.hpc-carpentry.org, `which` should be able to
+After logging back in to , `which` should be able to
 find `amdahl` without difficulties.
 If you had to load a Python module, load it again.
 
@@ -143,7 +147,7 @@ If you had to load a Python module, load it again.
 Many command-line programs include a "help" message. Try it with `amdahl`:
 
 ```bash
-[yourUsername@login1 ~]$ amdahl --help
+ amdahl --help
 ```
 
 ```output
@@ -169,34 +173,12 @@ tell us the important flags we might want to use when launching it.
 Create a submission file, requesting one task on a single node, then launch it.
 
 
-```bash
-[yourUsername@login1 ~]$ nano serial-job.sh
-[yourUsername@login1 ~]$ cat serial-job.sh
-```
 
-```bash
-#!/bin/bash
-#SBATCH -J solo-job
-#SBATCH -p cpubase_bycore_b1
-#SBATCH -N 1
-#SBATCH -n 1
-
-# Load the computing environment we need
-module load Python
-
-# Execute the task
-amdahl
-```
-
-```bash
-[yourUsername@login1 ~]$ sbatch serial-job.sh
-```
-
-As before, use the Slurm status commands to check whether your job
+As before, use the  status commands to check whether your job
 is running and when it ends:
 
 ```bash
-[yourUsername@login1 ~]$ squeue -u yourUsername
+  
 ```
 
 Use `ls` to locate the output file. The `-t` flag sorts in
@@ -210,7 +192,7 @@ The cluster output should be written to a file in the folder you launched the
 job from. For example,
 
 ```bash
-[yourUsername@login1 ~]$ ls -t
+ ls -t
 ```
 
 ```output
@@ -218,15 +200,15 @@ slurm-347087.out  serial-job.sh  amdahl  README.md  LICENSE.txt
 ```
 
 ```bash
-[yourUsername@login1 ~]$ cat slurm-347087.out
+ cat slurm-347087.out
 ```
 
 ```output
 Doing 30.000 seconds of 'work' on 1 processor,
 which should take 30.000 seconds with 0.850 parallel proportion of the workload.
 
-  Hello, World! I am process 0 of 1 on smnode1. I will do all the serial 'work' for 4.500 seconds.
-  Hello, World! I am process 0 of 1 on smnode1. I will do parallel 'work' for 25.500 seconds.
+  Hello, World! I am process 0 of 1 on . I will do all the serial 'work' for 4.500 seconds.
+  Hello, World! I am process 0 of 1 on . I will do parallel 'work' for 25.500 seconds.
 
 Total execution time (according to rank 0): 30.033 seconds
 ```
@@ -290,62 +272,6 @@ by examining the environment variables set when the job is launched.
 Let's modify the job script to request more cores and use the MPI run-time.
 
 
-```bash
-[yourUsername@login1 ~]$ cp serial-job.sh parallel-job.sh
-[yourUsername@login1 ~]$ nano parallel-job.sh
-[yourUsername@login1 ~]$ cat parallel-job.sh
-```
-
-```bash
-#!/bin/bash
-#SBATCH -J parallel-job
-#SBATCH -p cpubase_bycore_b1
-#SBATCH -N 1
-#SBATCH -n 4
-
-# Load the computing environment we need
-# (mpi4py and numpy are in SciPy-bundle)
-module load Python
-module load SciPy-bundle
-
-# Execute the task
-mpiexec amdahl
-```
-
-Then submit your job. Note that the submission command has not really changed
-from how we submitted the serial job: all the parallel settings are in the
-batch file rather than the command line.
-
-```bash
-[yourUsername@login1 ~]$ sbatch parallel-job.sh
-```
-
-As before, use the status commands to check when your job runs.
-
-```bash
-[yourUsername@login1 ~]$ ls -t
-```
-
-```output
-slurm-347178.out  parallel-job.sh  slurm-347087.out  serial-job.sh  amdahl  README.md  LICENSE.txt
-```
-
-```bash
-[yourUsername@login1 ~]$ cat slurm-347178.out
-```
-
-```output
-Doing 30.000 seconds of 'work' on 4 processors,
-which should take 10.875 seconds with 0.850 parallel proportion of the workload.
-
-  Hello, World! I am process 0 of 4 on smnode1. I will do all the serial 'work' for 4.500 seconds.
-  Hello, World! I am process 2 of 4 on smnode1. I will do parallel 'work' for 6.375 seconds.
-  Hello, World! I am process 1 of 4 on smnode1. I will do parallel 'work' for 6.375 seconds.
-  Hello, World! I am process 3 of 4 on smnode1. I will do parallel 'work' for 6.375 seconds.
-  Hello, World! I am process 0 of 4 on smnode1. I will do parallel 'work' for 6.375 seconds.
-
-Total execution time (according to rank 0): 10.888 seconds
-```
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
@@ -408,64 +334,6 @@ Let's run one more job, so we can see how close to a straight line our `amdahl`
 code gets.
 
 
-```bash
-[yourUsername@login1 ~]$ nano parallel-job.sh
-[yourUsername@login1 ~]$ cat parallel-job.sh
-```
-
-```bash
-#!/bin/bash
-#SBATCH -J parallel-job
-#SBATCH -p cpubase_bycore_b1
-#SBATCH -N 1
-#SBATCH -n 8
-
-# Load the computing environment we need
-# (mpi4py and numpy are in SciPy-bundle)
-module load Python
-module load SciPy-bundle
-
-# Execute the task
-mpiexec amdahl
-```
-
-Then submit your job. Note that the submission command has not really changed
-from how we submitted the serial job: all the parallel settings are in the
-batch file rather than the command line.
-
-```bash
-[yourUsername@login1 ~]$ sbatch parallel-job.sh
-```
-
-As before, use the status commands to check when your job runs.
-
-```bash
-[yourUsername@login1 ~]$ ls -t
-```
-
-```output
-slurm-347271.out  parallel-job.sh  slurm-347178.out  slurm-347087.out  serial-job.sh  amdahl  README.md  LICENSE.txt
-```
-
-```bash
-[yourUsername@login1 ~]$ cat slurm-347178.out
-```
-
-```output
-which should take 7.688 seconds with 0.850 parallel proportion of the workload.
-
-  Hello, World! I am process 4 of 8 on smnode1. I will do parallel 'work' for 3.188 seconds.
-  Hello, World! I am process 0 of 8 on smnode1. I will do all the serial 'work' for 4.500 seconds.
-  Hello, World! I am process 2 of 8 on smnode1. I will do parallel 'work' for 3.188 seconds.
-  Hello, World! I am process 1 of 8 on smnode1. I will do parallel 'work' for 3.188 seconds.
-  Hello, World! I am process 3 of 8 on smnode1. I will do parallel 'work' for 3.188 seconds.
-  Hello, World! I am process 5 of 8 on smnode1. I will do parallel 'work' for 3.188 seconds.
-  Hello, World! I am process 6 of 8 on smnode1. I will do parallel 'work' for 3.188 seconds.
-  Hello, World! I am process 7 of 8 on smnode1. I will do parallel 'work' for 3.188 seconds.
-  Hello, World! I am process 0 of 8 on smnode1. I will do parallel 'work' for 3.188 seconds.
-
-Total execution time (according to rank 0): 7.697 seconds
-```
 
 ::::::::::::::::::::::::::::::::::::::  discussion
 
@@ -497,7 +365,7 @@ S(t_{n}) = \frac{t_{1}}{t_{n}}
 $$
 
 ```bash
-[yourUsername@login1 ~]$ for n in 30.033 10.888 7.697; do python3 -c "print(30.033 / $n)"; done
+ for n in 30.033 10.888 7.697; do python3 -c "print(30.033 / $n)"; done
 ```
 
 | Number of CPUs | Speedup       | Ideal |
