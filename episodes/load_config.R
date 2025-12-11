@@ -8,6 +8,14 @@ library(tools)
 library(knitr)
 
 # -------------------------------------------------------------------
+# Define placeholder config and snippets() early so it always exists
+# -------------------------------------------------------------------
+config <- NULL
+snippets <- function(child_file) {
+  stop("snippets() called before configuration was loaded.")
+}
+
+# -------------------------------------------------------------------
 # Utility: Get the snippet directory next to a config file
 # -------------------------------------------------------------------
 
@@ -25,7 +33,6 @@ get_snippet_subdir <- function(file, must_exist = TRUE) {
 # -------------------------------------------------------------------
 # Load lesson configuration
 # -------------------------------------------------------------------
-config <- NULL
 config_file <- normalizePath("config.yaml")
 if(!file.exists(config_file)) {
   stop("Could not find lesson configuration: ", config_file)
