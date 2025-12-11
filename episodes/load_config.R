@@ -4,7 +4,6 @@
 ##
 
 library(yaml)
-library(tools)
 library(knitr)
 
 # -------------------------------------------------------------------
@@ -33,14 +32,30 @@ get_snippet_subdir <- function(file, must_exist = TRUE) {
 # -------------------------------------------------------------------
 # Load lesson configuration
 # -------------------------------------------------------------------
-config_file <- normalizePath("config.yaml")
-if(!file.exists(config_file)) {
-  # exactly where the config file is depends on what stage we are in the workflow
-  config_file <- normalizePath("../config.yaml")
+find_config <- function(paths, root) {
+  for (p in paths) {
+    candidate <- file.path(root, p)
+    if (file.exists(candidate)) return(normalizePath(candidate))
+  }
+  stop("Could not find lesson configuration in any known location.")
 }
-if(!file.exists(config_file)) {
-  stop("Could not find lesson configuration: ", config_file)
+
+get_rmd_dir <- function() {
+  input <- tryCatch(knitr::current_input(), error = function(e) NULL)
+  if (!is.null(input)) {
+    # knitting: return the Rmd’s directory
+    return(dirname(normalizePath(input)))
+  }
+  # NOT knitting (interactive or running script directly)
+  return(normalizePath(getwd()))
 }
+
+rmd_dir <- get_rmd_dir()
+
+config_file <- find_config(
+  paths = c("config.yaml", "../config.yaml"),
+  root  = rmd_dir
+)
 lesson_config <- yaml.load_file(config_file)
 # message("Loaded lesson config")
 
@@ -102,9 +117,6 @@ if (!is.null(custom_config_file)) {
 # -------------------------------------------------------------------
 
 snippets <- function(child_file) {
-  
-  # directory of the *currently-rendered* file
-  current_dir <- dirname(knitr::current_input(dir = TRUE))
   
   # Construct absolute paths to the snippet candidates
   doc_paths <- list(
