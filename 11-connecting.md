@@ -10,10 +10,6 @@ Warning in normalizePath(input): path[1]="11-connecting.Rmd": No such file or
 directory
 ```
 
-``` error
-Error in find_config(paths = c("config.yaml", "../config.yaml"), root = rmd_dir): Could not find lesson configuration in any known location.
-```
-
 ::::::::::::::::::::::::::::::::::::::: objectives
 
 - Configure secure access to a remote HPC system.
@@ -68,7 +64,7 @@ When logging in to a laptop, tablet, or other personal device, a username,
 password, or pattern are normally required to prevent unauthorized access. In
 these situations, the likelihood of somebody else intercepting your password is
 low, since logging your keystrokes requires a malicious exploit or physical
-access. For systems like `` running an SSH server, anybody
+access. For systems like `login1` running an SSH server, anybody
 on the network can log in, or try to. Since usernames are often public or easy
 to guess, your password is often the weakest link in the security chain. Many
 clusters therefore forbid password-based login, requiring instead that you
@@ -133,7 +129,7 @@ Once you have opened a terminal, check for existing SSH keys and filenames
 since existing SSH keys are overwritten.
 
 ```bash
- ls ~/.ssh/
+[you@laptop:~]$ ls ~/.ssh/
 ```
 
 If `~/.ssh/id_ed25519` already exists, you will need to specify
@@ -152,7 +148,7 @@ produce a stronger key than the `ssh-keygen` default by invoking these flags:
   extension added.
 
 ```bash
- ssh-keygen -a 100 -f ~/.ssh/id_ed25519 -t ed25519
+[you@laptop:~]$ ssh-keygen -a 100 -f ~/.ssh/id_ed25519 -t ed25519
 ```
 
 When prompted, enter a strong password with the
@@ -177,7 +173,7 @@ If key generation failed because ed25519 is not available, try using the older
 check for an existing key:
 
 ```bash
- ls ~/.ssh/
+[you@laptop:~]$ ls ~/.ssh/
 ```
 
 If `~/.ssh/id_rsa` already exists, you will need to specify choose a different
@@ -189,7 +185,7 @@ name for the new key-pair. Generate it as above, with the following extra flags:
   rather than PEM.
 
 ```bash
- ssh-keygen -a 100 -b 4096 -f ~/.ssh/id_rsa -o -t rsa
+[you@laptop:~]$ ssh-keygen -a 100 -b 4096 -f ~/.ssh/id_rsa -o -t rsa
 ```
 
 When prompted, enter a strong password with the
@@ -245,7 +241,7 @@ type it in again.
 Open your terminal application and check if an agent is running:
 
 ```bash
- ssh-add -l
+[you@laptop:~]$ ssh-add -l
 ```
 
 - If you get an error like this one,
@@ -257,7 +253,7 @@ Open your terminal application and check if an agent is running:
   ... then you need to launch the agent as follows:
   
   ```bash
-   eval $(ssh-agent)
+  [you@laptop:~]$ eval $(ssh-agent)
   ```
   
   :::::::::::::::::::::::::::::::::::::::::  callout
@@ -270,7 +266,7 @@ Open your terminal application and check if an agent is running:
   shell commands that can be used to reach it -- but *does not execute them!*
   
   ```bash
-   ssh-agent
+  [you@laptop:~]$ ssh-agent
   ```
   
   ```output
@@ -295,7 +291,7 @@ Open your terminal application and check if an agent is running:
 Add your key to the agent, with session expiration after 8 hours:
 
 ```bash
- ssh-add -t 8h ~/.ssh/id_ed25519
+[you@laptop:~]$ ssh-add -t 8h ~/.ssh/id_ed25519
 ```
 
 ```output
@@ -314,20 +310,18 @@ See the [PuTTY documentation][putty-agent].
 
 ### Transfer Your Public Key
 
-```bash
- scp ~/.ssh/id_ed25519.pub @:~/
-```
 
 
+Visit [https://mokey.cluster.hpc-carpentry.org](https://mokey.cluster.hpc-carpentry.org) to upload your SSH public key. (Remember, it's the one ending in `.pub`!)
 
 ## Log In to the Cluster
 
 Go ahead and open your terminal or graphical SSH client, then log in to the
-cluster. Replace `` with your username or the one
+cluster. Replace `yourUsername` with your username or the one
 supplied by the instructors.
 
 ```bash
- ssh @
+[you@laptop:~]$ ssh yourUsername@cluster.hpc-carpentry.org
 ```
 
 You may be asked for your password. Watch out: the characters you type after
@@ -345,9 +339,9 @@ connected to the local system and the remote system will typically be different
 for every user. We still need to indicate which system we are entering commands
 on though so we will adopt the following convention:
 
-- `` when the command is to be entered on a terminal
+- `[you@laptop:~]$` when the command is to be entered on a terminal
   connected to your local computer
-- `` when the command is to be entered on a
+- `[yourUsername@login1 ~]$` when the command is to be entered on a
   terminal connected to the remote system
 - `$` when it really doesn't matter which system the terminal is connected to.
 
@@ -361,28 +355,28 @@ computer we are logged onto can be checked with the `hostname` command. (You
 may also notice that the current hostname is also part of our prompt!)
 
 ```bash
- hostname
+[yourUsername@login1 ~]$ hostname
 ```
 
 ```output
-
+login1
 ```
 
 So, we're definitely on the remote machine. Next, let's find out where we are
 by running `pwd` to **p**rint the **w**orking **d**irectory.
 
 ```bash
- pwd
+[yourUsername@login1 ~]$ pwd
 ```
 
 ```output
-/
+/home/yourUsername
 ```
 
 Great, we know where we are! Let's see what's in our current directory:
 
 ```bash
- ls
+[yourUsername@login1 ~]$ ls
 ```
 
 ```output
@@ -395,7 +389,7 @@ other filesystems. If they did not, your home directory may appear empty. To
 double-check, include hidden files in your directory listing:
 
 ```bash
- ls -a
+[yourUsername@login1 ~]$ ls -a
 ```
 
 ```output
@@ -404,7 +398,7 @@ double-check, include hidden files in your directory listing:
 ```
 
 In the first column, `.` is a reference to the current directory and `..` a
-reference to its parent (``). You may or may not see
+reference to its parent (`/home`). You may or may not see
 the other files, or files like them: `.bashrc` is a shell configuration file,
 which you can edit with your preferences; and `.ssh` is a directory storing SSH
 keys and a record of authorized connections.
@@ -429,14 +423,14 @@ If the `.ssh` folder was not listed above, then it does not yet
 exist: create it.
 
 ```bash
- mkdir ~/.ssh
+[yourUsername@login1 ~]$ mkdir ~/.ssh
 ```
 
 Now, use `cat` to print your public key, but redirect the output, appending it
 to the `authorized_keys` file:
 
 ```bash
- cat ~/id_ed25519.pub >> ~/.ssh/authorized_keys
+[yourUsername@login1 ~]$ cat ~/id_ed25519.pub >> ~/.ssh/authorized_keys
 ```
 
 That's all! Disconnect, then try to log back into the remote: if your key and
@@ -444,11 +438,11 @@ agent have been configured correctly, you should not be prompted for the
 password for your SSH key.
 
 ```bash
- logout
+[yourUsername@login1 ~]$ logout
 ```
 
 ```bash
- ssh @
+[you@laptop:~]$ ssh yourUsername@cluster.hpc-carpentry.org
 ```
 
 [gh-ssh]: https://docs.github.com/en/authentication/connecting-to-github-with-ssh

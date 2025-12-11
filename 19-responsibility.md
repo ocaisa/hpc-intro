@@ -10,10 +10,6 @@ Warning in normalizePath(input): path[1]="19-responsibility.Rmd": No such file
 or directory
 ```
 
-``` error
-Error in find_config(paths = c("config.yaml", "../config.yaml"), root = rmd_dir): Could not find lesson configuration in any known location.
-```
-
 ::::::::::::::::::::::::::::::::::::::: objectives
 
 - Describe how the actions of a single user can affect the experience of others on a shared system.
@@ -272,17 +268,17 @@ data.
 
 Say you have a "data" folder containing 10,000 or so files, a healthy mix of
 small and large ASCII and binary data. Which of the following would be the
-best way to transfer them to ?
+best way to transfer them to HPC Carpentry's Cloud Cluster?
 
-1. `scp -r data @:~/`
-2. `rsync -ra data @:~/`
-3. `rsync -raz data @:~/`
+1. `scp -r data yourUsername@cluster.hpc-carpentry.org:~/`
+2. `rsync -ra data yourUsername@cluster.hpc-carpentry.org:~/`
+3. `rsync -raz data yourUsername@cluster.hpc-carpentry.org:~/`
 4. `tar -cvf data.tar data;`
 
-   `rsync -raz data.tar @:~/`
+   `rsync -raz data.tar yourUsername@cluster.hpc-carpentry.org:~/`
 5. `tar -cvzf data.tar.gz data;`
 
-   `rsync -ra data.tar.gz @:~/`
+   `rsync -ra data.tar.gz yourUsername@cluster.hpc-carpentry.org:~/`
 
 :::::::::::::::  solution
 

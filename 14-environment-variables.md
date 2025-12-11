@@ -10,10 +10,6 @@ Warning in normalizePath(input): path[1]="14-environment-variables.Rmd": No
 such file or directory
 ```
 
-``` error
-Error in find_config(paths = c("config.yaml", "../config.yaml"), root = rmd_dir): Could not find lesson configuration in any known location.
-```
-
 ::::::::::::::::::::::::::::::::::::::: objectives
 
 - Understand how variables are implemented in the shell
@@ -200,7 +196,7 @@ run**.
 
 ## Job environment variables
 
-When `` runs a job, it sets a number of environment
+When `Slurm` runs a job, it sets a number of environment
 variables for the job. One of these will let us check what directory our job
 script was submitted from. The `SLURM_SUBMIT_DIR` variable is set to the
 directory from which our job was submitted. Using the `SLURM_SUBMIT_DIR`
@@ -212,13 +208,13 @@ job was submitted.
 ## Solution
 
 ```bash
- nano example-job.sh
- cat example-job.sh
+[yourUsername@login1 ~]$ nano example-job.sh
+[yourUsername@login1 ~]$ cat example-job.sh
 ```
 
 ```output
-
-  00:00:30
+#!/bin/bash
+#SBATCH -t 00:00:30
 
 echo -n "This script is running on "
 hostname
