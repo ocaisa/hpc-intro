@@ -35,6 +35,10 @@ get_snippet_subdir <- function(file, must_exist = TRUE) {
 # -------------------------------------------------------------------
 config_file <- normalizePath("config.yaml")
 if(!file.exists(config_file)) {
+  # exactly where the config file is depends on what stage we are in the workflow
+  config_file <- normalizePath("../config.yaml")
+}
+if(!file.exists(config_file)) {
   stop("Could not find lesson configuration: ", config_file)
 }
 lesson_config <- yaml.load_file(config_file)
