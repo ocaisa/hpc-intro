@@ -43,7 +43,7 @@ find_config <- function(paths, root) {
 
 get_rmd_dir <- function() {
   input <- tryCatch(knitr::current_input(), error = function(e) NULL)
-  if (!is.null(input) && file.exists(candidate)) {
+  if (!is.null(input) && file.exists(input)) {
     # knitting: return the Rmd’s directory
     return(dirname(normalizePath(input)))
   }
