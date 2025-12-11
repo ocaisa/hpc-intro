@@ -25,7 +25,7 @@ get_snippet_subdir <- function(file, must_exist = TRUE) {
 # -------------------------------------------------------------------
 # Load lesson configuration
 # -------------------------------------------------------------------
-
+config <- NULL
 config_file <- normalizePath("config.yaml")
 if(!file.exists(config_file)) {
   stop("Could not find lesson configuration: ", config_file)
