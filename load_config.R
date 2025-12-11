@@ -67,16 +67,36 @@ if (is.null(lesson_config$default_config)) {
   stop("default_config is not defined in top-level configuration: ", config_file)
 }
 
-if (!file.exists(lesson_config$default_config)) {
-  stop("Default configuration file does not exist: ", lesson_config$default_config)
-}
-
 # -------------------------------------------------------------------
 # Load fallback/default config
 # -------------------------------------------------------------------
-
-config <- yaml.load_file(lesson_config$default_config)
-fallback_snippets <- get_snippet_subdir(lesson_config$default_config)
+load_yaml_config <- function(config_path) {
+  original_path <- config_path
+  
+  # Normalize path separators
+  config_path <- normalizePath(config_path, winslash = "/", mustWork = FALSE)
+  # If the original path doesn't exist, try removing the first segment
+  if (!file.exists(config_path)) {
+    parts <- strsplit(config_path, "/")[[1]]
+    if (length(parts) > 1) {
+      new_path <- paste(parts[-1], collapse = "/")
+      if (file.exists(new_path)) {
+        config_path <- new_path
+      }
+    }
+  }
+  # If file still doesn't exist, stop with an error
+  if (!file.exists(config_path)) {
+    stop("YAML file not found: ", original_path)
+  }
+  # Load YAML
+  config <- yaml.load_file(config_path)
+  # Return named list
+  list(config = config, path_used = config_path)
+}
+result <- load_yaml_config(lesson_config$default_config)
+config <- result$config
+fallback_snippets <- get_snippet_subdir(result$path_used)
 
 # -------------------------------------------------------------------
 # Load optional custom config and merge
@@ -90,22 +110,17 @@ if (custom_config_file == "") {
   custom_config_file <- lesson_config$custom_config
 }
 if (!is.null(custom_config_file)) {
-  if (file.exists(custom_config_file)) {
-    
-    custom_config <- yaml.load_file(custom_config_file)
-    
-    # merge: custom overrides default
-    config <- modifyList(config, custom_config)
-    
-    # snippet directory for custom configs does NOT have to exist
-    main_snippets <- get_snippet_subdir(
-      custom_config_file,
-      must_exist = FALSE
-    )
-  } else {
-    stop("Custom configuration provided but does not exist: ", custom_config_file)
-  }
-  
+  result <- load_yaml_config(custom_config_file)
+  custom_config <- result$config
+
+  # merge: custom overrides default
+  config <- modifyList(config, custom_config)
+
+  # snippet directory for custom configs does NOT have to exist
+  main_snippets <- get_snippet_subdir(
+    result$path_used,
+    must_exist = FALSE
+  )
 } else {
   # no custom config → only fallback snippets available
   main_snippets <- fallback_snippets
