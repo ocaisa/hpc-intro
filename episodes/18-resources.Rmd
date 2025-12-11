@@ -133,7 +133,7 @@ The following line tells `r config$sched$name` that our job should
 finish within 2 minutes:
 
 ```bash
-`r config$sched$comment` `r config$sched$flag$time` `r if(config$sched$name == "Slurm") {print(" ")} else {print("=")}`00:02:00
+`r config$sched$comment` `r config$sched$flag$time` `r if(!is.null(config$sched$name) && config$sched$name == "Slurm") {print(" ")} else {print("=")}`00:02:00
 ```
 
 :::::::::::::::::::::::::
