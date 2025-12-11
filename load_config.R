@@ -11,8 +11,7 @@ library(knitr)
 # -------------------------------------------------------------------
 config <- NULL
 snippets <- function(child_file) {
-  message("snippets() called before configuration was loaded.")
-  return(NULL)
+  stop("snippets() called before configuration was loaded.")
 }
 
 # -------------------------------------------------------------------
