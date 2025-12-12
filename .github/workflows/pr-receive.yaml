@@ -88,7 +88,8 @@ jobs:
       - name: "Validate and Build Markdown"
         id: build-site
         run: |
-          sandpaper::reset_site(path = '${{ github.workspace }}')
+          # sandpaper::reset_site(path = '${{ github.workspace }}')
+          system("cp ${{ github.workspace }}/config.yaml .")
           sandpaper::package_cache_trigger(TRUE)
           sandpaper::validate_lesson(path = '${{ github.workspace }}')
           sandpaper:::build_markdown(path = '${{ github.workspace }}', quiet = FALSE)
@@ -99,10 +100,6 @@ jobs:
       - name: "Generate Artifacts"
         id: generate-artifacts
         run: |
-          # The reset we did in the previous step messed with the .gitignore
-          # but I couldn't track down how/where (or how to avoid it)
-          system("sed -i '/^site\\/*$/d' ${{ github.workspace }}/.gitignore")
-          system("sed -i '/^site\\/*$/d' ${{ github.workspace }}/../.gitignore")
           sandpaper:::ci_bundle_pr_artifacts(
             repo         = '${{ github.repository }}',
             pr_number    = '${{ github.event.number }}',
