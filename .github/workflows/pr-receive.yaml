@@ -88,9 +88,9 @@ jobs:
       - name: "Validate and Build Markdown"
         id: build-site
         run: |
+          sandpaper::reset_site(path = '${{ github.workspace }}')
           sandpaper::package_cache_trigger(TRUE)
           sandpaper::validate_lesson(path = '${{ github.workspace }}')
-          sandpaper::reset_site(path = '${{ github.workspace }}')
           sandpaper:::build_markdown(path = '${{ github.workspace }}', quiet = FALSE)
         shell: Rscript {0}
         env:
