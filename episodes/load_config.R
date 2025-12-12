@@ -131,31 +131,43 @@ if (!is.null(custom_config_file)) {
 # snippets(): pick main-override version or fallback version
 # -------------------------------------------------------------------
 
-snippets <- function(child_file) {
-  
+snippets <- function(child_file, render = TRUE) {
+
   # Construct absolute paths to the snippet candidates
   doc_paths <- list(
     main     = file.path(main_snippets, child_file),
     fallback = file.path(fallback_snippets, child_file)
   )
-  
-  # print(doc_paths)
-  
-  if (file.exists(doc_paths$main)) {
-    message("Using MAIN snippet: ", doc_paths$main)
-    return(doc_paths$main)
-  }
-  
-  if (file.exists(doc_paths$fallback)) {
-    message("Using FALLBACK snippet: ", doc_paths$fallback)
-    return(doc_paths$fallback)
-  }
-  
-  stop("No snippet file exists: ", child_file,
-       "\nMain path: ",     doc_paths$main,
-       "\nFallback path: ", doc_paths$fallback)
-}
 
+  # Determine which snippet to use and store a message
+  msg <- NULL
+  if (file.exists(doc_paths$main)) {
+    msg <- paste("Using MAIN snippet:", doc_paths$main)
+    path <- doc_paths$main
+  } else if (file.exists(doc_paths$fallback)) {
+    msg <- paste("Using FALLBACK snippet:", doc_paths$fallback)
+    path <- doc_paths$fallback
+  } else {
+    stop("Snippet not found: ", child_file,
+         "\nMain: ",     doc_paths$main,
+         "\nFallback: ", doc_paths$fallback)
+  }
+
+  # Optionally render the child here
+  if (render) {
+    # Write message to R console with a newline
+    cat(msg, "\n", file = stderr())
+
+    # Render the child content into the document
+    cat(knitr::knit_child(path, quiet = TRUE))
+
+    return(invisible(NULL))
+  } else {
+    # Or return just the path if needed
+    if (!is.null(msg)) message(msg)
+    return(path)
+  }
+}
 # -------------------------------------------------------------------
 # End of script
 # -------------------------------------------------------------------

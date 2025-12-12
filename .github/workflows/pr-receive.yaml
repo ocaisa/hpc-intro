@@ -92,6 +92,8 @@ jobs:
           sandpaper::validate_lesson(path = '${{ github.workspace }}')
           sandpaper:::build_markdown(path = '${{ github.workspace }}', quiet = FALSE)
         shell: Rscript {0}
+        env:
+          HPC_CARPENTRY_CUSTOMIZATION: ${{ vars.HPC_CARPENTRY_CUSTOMIZATION }}
 
       - name: "Generate Artifacts"
         id: generate-artifacts
