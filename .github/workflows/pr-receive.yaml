@@ -102,6 +102,7 @@ jobs:
           # The reset we did in the previous step messed with the .gitignore
           # but I couldn't track down how/where (or how to avoid it)
           system("sed -i '/^site\\/*$/d' ${{ github.workspace }}/.gitignore")
+          system("sed -i '/^site\\/*$/d' ${{ github.workspace }}/../.gitignore")
           sandpaper:::ci_bundle_pr_artifacts(
             repo         = '${{ github.repository }}',
             pr_number    = '${{ github.event.number }}',
