@@ -326,7 +326,7 @@ This is an important point to remember: files saved on one node
 
 ::: challenge
 
-## Explore a Worker Node
+## Explore a Worker Node (testing admonitions)
 
 Finally, let's look at the resources available on the worker nodes
 where your jobs will actually run. Try running this command to see
